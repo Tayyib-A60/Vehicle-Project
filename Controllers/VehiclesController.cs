@@ -8,6 +8,7 @@ using Vega.Controllers.Resources;
 using Vega.Models;
 using Vega.Core;
 using Vega.Core.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Vega.Controllers {
     [Route ("/api/vehicles")]
@@ -23,6 +24,7 @@ namespace Vega.Controllers {
             this._mapper = mapper;
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateVehicle (SaveVehicleResource vehicleResource) {            
             if (!ModelState.IsValid)
                 return BadRequest (ModelState);
@@ -40,6 +42,7 @@ namespace Vega.Controllers {
         }
 
         [HttpPut ("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateVehicle (int id, SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid) {
@@ -61,6 +64,7 @@ namespace Vega.Controllers {
         }
 
         [HttpDelete ("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteVehicle (int id) {
             var vehicle = await _repository.GetVehicle (id, includeRelated : true);
 
@@ -84,12 +88,18 @@ namespace Vega.Controllers {
             return Ok (vehicleResource);
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<VehicleResource>> GetVehicles (FilterResource filterResource) 
+         [HttpGet("test")]
+        public IActionResult GetDummy (int abc) 
         {
-            var filter = _mapper.Map<FilterResource, Filter>(filterResource);
-            var vehicles = await _repository.GetVehicles(filter);
-            return _mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>> (vehicles);
+            return Ok(abc);
+        }
+
+        [HttpGet]
+        public async Task<QueryResultResource<VehicleResource>> GetVehicles ([FromQuery] VehicleQueryResource filterResource) 
+        {
+            var filter = _mapper.Map<VehicleQueryResource, VehicleQuery>(filterResource);
+            var queryResult = await _repository.GetVehicles(filter);
+            return _mapper.Map<QueryResult<Vehicle>, QueryResultResource<VehicleResource>>(queryResult);
         }
     }
 }

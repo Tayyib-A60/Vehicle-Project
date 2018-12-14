@@ -7,7 +7,7 @@
   <div class="well">
       <div class="form-group">
           <label for="make">Make</label>
-          <select name="make" id="make" class="form-control" [(ngModel)]="filter.makeId" (change)="onFilterChange()">
+          <select name="make" id="make" class="form-control" [(ngModel)]="query.makeId" (change)="onFilterChange()">
             <option value=""></option>
             <option *ngFor="let m of makes" value="{{m.id}}">{{m.name}}</option>
           </select>
@@ -17,22 +17,33 @@
   <table class="table table-hover table-responsive table-striped">
     <thead>
       <tr>
-        <th>Id</th>
-        <th>Make</th>
-        <th>Model</th>
-        <th>Contact Name</th>
-        <th></th>
+        <th *ngFor="let c of columns">
+        <div *ngIf="c.isSortable">
+            <a style="cursor: pointer;" (click)="sort(c.key)">
+                {{c.title}}
+                <i
+                *ngIf="query.sortBy === c.key"
+                class="fa" [class.fa-sort-asc]="query.isSortAscending"
+                [class.fa-sort-desc]="!query.isSortAscending"></i>
+            </a>
+        </div>
+        <div *ngIf="!c.isSortable">
+            {{c.title}}
+        </div>
+      </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let vehicle of vehicles">
+      <tr *ngFor="let vehicle of queryResult.items">
         <td class="table-hover">{{vehicle.id}}</td>
         <td>{{vehicle.make.name}}</td>
         <td>{{vehicle.model.name}}</td>
         <td>{{vehicle.contact.name}}</td>
-        <td><a [routerLink]="['/vehicle/form/' + vehicle.id]" [routerLinkActive]="['link-active']" >view</a></td>
+        <td><a [routerLink]="['/vehicle/view/' + vehicle.id]" [routerLinkActive]="['link-active']" >view</a></td>
       </tr>
     </tbody>
-
   </table>
+</div>
+<div>
+  <app-pagination *ngIf="queryResult.totalItems > query.pageSize" [totalItems]="queryResult.totalItems" [pageSize]="query.pageSize" (pageChanged)="onPageChange($event)"></app-pagination>
 </div>

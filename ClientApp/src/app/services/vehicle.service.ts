@@ -20,20 +20,19 @@ export class VehicleService {
   }
   toQueryString(obj) {
     const parts = [];
-    // for (var property in obj) {
-    //   const value = obj[property];
-    //   if (value != null && value !== undefined) {
-    //     parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
-    //   }
-    // }
+    for (const property in obj) {
+      const value = obj[property];
+      if (value != null && value !== undefined) {
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+      }
+    }
     return parts.join('&');
-
   }
   createVehicle(vehicle) {
     return this.httpClient.post('/api/vehicles', vehicle);
   }
-  getVehicle(id) {
-    return this.httpClient.get<any>('/api/vehicles/' + id);
+  getVehicle(id?) {
+    return this.httpClient.get('/api/vehicles/' + id).toPromise();
   }
   update(vehicle: SaveVehicle) {
     return this.httpClient.put('/api/vehicles/' + vehicle.id, vehicle);
@@ -42,3 +41,4 @@ export class VehicleService {
     return this.httpClient.delete('/api/vehicles/' + id);
   }
 }
+

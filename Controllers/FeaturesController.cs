@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vega.Controllers.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Vega.Core;
 using Vega.Models;
 using Vega.Persistence;

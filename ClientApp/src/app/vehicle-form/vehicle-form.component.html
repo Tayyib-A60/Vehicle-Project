@@ -38,7 +38,6 @@
   </div>
 </div> -->
 <h1>New Vehicle</h1>
-<p>{{vehicle | json}}</p>
 <form #f="ngForm" (ngSubmit)="submit()">
   <div class="form-group">
     <label for="make">Make</label>
@@ -73,11 +72,11 @@
   <h2>Contact</h2>
   <div class="form-group">
     <label for="contactName">Name</label>
-    <input type="text" id="contactName" class="form-control" [(ngModel)]="vehicle.contact.name" name="contactName" #name="ngModel" required>
+    <input type="text" id="contactName" class="form-control has-success" [(ngModel)]="vehicle.contact.name" name="contactName" #name="ngModel" required>
   </div>
   <div class="form-group">
     <label for="contactPhone">Phone</label>
-    <input type="text" id="contactPhone" class="form-control" [(ngModel)]="vehicle.contact.phone" name="contactPhone" #phone="ngModel" required>
+    <input type="text" id="contactPhone" class="form-control has-error" [(ngModel)]="vehicle.contact.phone" name="contactPhone" #phone="ngModel" required>
   </div>
   <div class="form-group">
     <label for="contactEmail">Email</label>

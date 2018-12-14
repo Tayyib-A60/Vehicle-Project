@@ -39,7 +39,7 @@ export class VehicleFormComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router,
     private vehicleService: VehicleService, private toastr: ToastrService) {
       route.params.subscribe(p => {
-        this.vehicleId = +p['id'];
+        this.vehicleId = +p['id'] || 0;
       });
     }
 
@@ -49,9 +49,9 @@ export class VehicleFormComponent implements OnInit {
       this.vehicleService.getFeatures(),
     ];
     const getvehicle = this.vehicleService.getVehicle(this.vehicleId);
-    if (this.vehicleId) {
+    if (this.vehicleId > 0) {
       this.editMode = true;
-      sources.push(getvehicle.toPromise());
+      sources.push(getvehicle);
     }
 
     Promise.all(sources).then(data => {
@@ -89,7 +89,6 @@ export class VehicleFormComponent implements OnInit {
   onFeatureToggle(FeatureId: number, $event) {
       if ($event.target.checked) {
         this.vehicle.features.push(FeatureId);
-        // console.log(this.vehicle.features);
       } else {
         const index = this.vehicle.features.indexOf(FeatureId);
         this.vehicle.features.splice(index, 1);
@@ -117,6 +116,7 @@ export class VehicleFormComponent implements OnInit {
       this.vehicleService.delete(this.vehicleId).subscribe(vehicle => {
         this.router.navigate(['']);
         });
+        this.toastr.success('Vehicle was deleted Successfully', 'Deleted');
       }
     }
   }
